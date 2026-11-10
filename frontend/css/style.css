@@ -1,0 +1,62 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; color: #333; }
+
+/* Login */
+.tela-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2e7d32, #81c784); }
+.login-box { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.2); width: 320px; text-align: center; }
+.login-box h1 { color: #2e7d32; font-size: 2rem; margin-bottom: 8px; }
+.login-box p { color: #666; margin-bottom: 20px; font-size: .9rem; }
+.login-box input { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+.login-box button { width: 100%; padding: 12px; margin-top: 12px; background: #2e7d32; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+.login-box button:hover { background: #1b5e20; }
+.erro { color: #c62828; margin-top: 8px; font-size: .85rem; }
+
+/* App */
+header { background: #2e7d32; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+header h1 { font-size: 1.3rem; }
+header span { margin-right: 16px; font-size: .9rem; }
+.btn-secundario { background: #666; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+.btn-secundario:hover { background: #444; }
+
+#tabs { background: #fff; padding: 0 24px; display: flex; gap: 4px; border-bottom: 2px solid #ddd; overflow-x: auto; }
+.tab { background: none; border: none; padding: 14px 20px; cursor: pointer; font-size: .95rem; color: #666; border-bottom: 3px solid transparent; white-space: nowrap; }
+.tab:hover { color: #2e7d32; }
+.tab.ativo { color: #2e7d32; border-bottom-color: #2e7d32; font-weight: 600; }
+
+.conteudo { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; }
+.conteudo.ativo { display: block; }
+.conteudo h2 { color: #2e7d32; margin-bottom: 16px; font-size: 1.4rem; }
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); border-left: 4px solid #2e7d32; }
+.card-titulo { display: block; color: #666; font-size: .85rem; margin-bottom: 8px; }
+.card-valor { display: block; font-size: 2rem; font-weight: 700; color: #2e7d32; }
+.card-unidade { display: block; color: #999; font-size: .8rem; margin-top: 4px; }
+
+/* Formulários */
+.form-crud { background: #fff; padding: 16px; border-radius: 8px; margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+.form-crud input, .form-crud select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: .95rem; flex: 1; min-width: 130px; }
+.form-crud button { padding: 10px 20px; background: #2e7d32; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+.form-crud button:hover { background: #1b5e20; }
+.form-crud .btn-secundario { background: #999; }
+
+/* Tabelas */
+table { width: 100%; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
+th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #eee; }
+th { background: #f0f0f0; font-weight: 600; color: #333; font-size: .9rem; }
+tr:hover { background: #f9f9f9; }
+.btn-acao { padding: 6px 12px; margin-right: 4px; border: none; border-radius: 4px; cursor: pointer; font-size: .85rem; }
+.btn-editar { background: #1976d2; color: #fff; }
+.btn-deletar { background: #c62828; color: #fff; }
+.status-conforme { color: #2e7d32; font-weight: 600; }
+.status-nao_conforme { color: #c62828; font-weight: 600; }
+.status-pendente { color: #f57c00; font-weight: 600; }
+
+/* Gráficos */
+.grafico-container { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 20px; height: 320px; }
+.graficos-duplos { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 768px) { .graficos-duplos { grid-template-columns: 1fr; } }
+
+/* Relatório JSON */
+#relatorio-json { background: #2d2d2d; color: #a5d6a7; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: .85rem; margin-bottom: 20px; max-height: 280px; }
