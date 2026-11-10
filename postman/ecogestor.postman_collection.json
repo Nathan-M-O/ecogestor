@@ -1,0 +1,336 @@
+{
+  "info": {
+    "name": "EcoGestor API",
+    "description": "Coleção de testes dos Web Services da aplicação EcoGestor (APS - Gestão Ambiental ISO 14.000). Contém 11 requisições em quatro grupos: Autenticação, Consultas, CRUD e Tratamento de Erros. O token JWT é capturado automaticamente após o login e reutilizado nas requisições protegidas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "aguaId", "value": "1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticação",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@eco.com\",\n  \"senha\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Autentica o usuário e retorna o token JWT que será usado nas requisições protegidas."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                "pm.test('Resposta contém token JWT', () => {",
+                "  const res = pm.response.json();",
+                "  pm.expect(res.token).to.be.a('string');",
+                "  pm.collectionVariables.set('token', res.token);",
+                "});",
+                "pm.test('Resposta contém dados do usuário', () => {",
+                "  const res = pm.response.json();",
+                "  pm.expect(res.usuario).to.have.property('email', 'admin@eco.com');",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "2. Consultas (GET)",
+      "item": [
+        {
+          "name": "Listar Água",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/agua",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agua"]
+            },
+            "description": "Lista todos os registros de consumo de água. Rota protegida por JWT."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                "pm.test('Retorna um array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        },
+        {
+          "name": "Listar Energia",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/energia",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "energia"]
+            },
+            "description": "Lista todos os registros de consumo de energia."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                "pm.test('Retorna um array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        },
+        {
+          "name": "Listar Resíduos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/residuos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "residuos"]
+            },
+            "description": "Lista todos os registros de resíduos."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                "pm.test('Retorna um array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        },
+        {
+          "name": "Listar Checklist ISO",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/iso",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "iso"]
+            },
+            "description": "Lista os requisitos do checklist ISO 14.000."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                "pm.test('Retorna um array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        },
+        {
+          "name": "Relatório Consolidado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/relatorios/ambiental-mensal",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "relatorios", "ambiental-mensal"]
+            },
+            "description": "Retorna o relatório consolidado com todos os indicadores ambientais calculados no backend."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                "pm.test('Contém bloco de água', () => pm.expect(pm.response.json()).to.have.property('agua'));",
+                "pm.test('Contém bloco de energia', () => pm.expect(pm.response.json()).to.have.property('energia'));",
+                "pm.test('Contém bloco de resíduos', () => pm.expect(pm.response.json()).to.have.property('residuos'));",
+                "pm.test('Contém bloco ISO 14000', () => pm.expect(pm.response.json()).to.have.property('iso14000'));",
+                "pm.test('Contém pegada de carbono', () => pm.expect(pm.response.json()).to.have.property('pegadaCarbono'));"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        },
+        {
+          "name": "Histórico Mensal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/relatorios/ambiental-mensal/historico",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "relatorios", "ambiental-mensal", "historico"]
+            },
+            "description": "Retorna dados agrupados por mês, usados nos gráficos históricos."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                "pm.test('Contém arrays de água, energia e resíduos', () => {",
+                "  const res = pm.response.json();",
+                "  pm.expect(res).to.have.property('agua');",
+                "  pm.expect(res).to.have.property('energia');",
+                "  pm.expect(res).to.have.property('residuos');",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "3. CRUD (Criar/Deletar)",
+      "item": [
+        {
+          "name": "Criar Água",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"2026-11-10\",\n  \"setor\": \"Teste Postman\",\n  \"m3\": 42.5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/agua",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agua"]
+            },
+            "description": "Cria um novo registro de consumo de água. O ID retornado é capturado na variável aguaId para uso no DELETE."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 201 Created', () => pm.response.to.have.status(201));",
+                "pm.test('Registro criado com ID', () => {",
+                "  const res = pm.response.json();",
+                "  pm.expect(res).to.have.property('id');",
+                "  pm.expect(res.setor).to.eql('Teste Postman');",
+                "  pm.collectionVariables.set('aguaId', res.id);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        },
+        {
+          "name": "Deletar Água",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/agua/{{aguaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agua", "{{aguaId}}"]
+            },
+            "description": "Deleta o registro criado na requisição anterior. Usa a variável aguaId capturada no POST. Retorna 204 No Content."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 204 No Content', () => pm.response.to.have.status(204));"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "4. Tratamento de Erros",
+      "item": [
+        {
+          "name": "Água sem token (espera 401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "noauth" },
+            "url": {
+              "raw": "{{baseUrl}}/api/agua",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agua"]
+            },
+            "description": "Requisição sem token JWT. Deve retornar HTTP 401 comprovando que a rota é protegida."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 401 Unauthorized', () => pm.response.to.have.status(401));",
+                "pm.test('Corpo do erro padronizado', () => {",
+                "  const res = pm.response.json();",
+                "  pm.expect(res).to.have.property('erro');",
+                "  pm.expect(res).to.have.property('mensagem');",
+                "  pm.expect(res).to.have.property('status', 401);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        },
+        {
+          "name": "Água com ID inexistente (espera 404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "url": {
+              "raw": "{{baseUrl}}/api/agua/99999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "agua", "99999"]
+            },
+            "description": "Busca por um registro inexistente. Deve retornar HTTP 404 com corpo de erro padronizado."
+          },
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 404 Not Found', () => pm.response.to.have.status(404));",
+                "pm.test('Corpo do erro padronizado', () => {",
+                "  const res = pm.response.json();",
+                "  pm.expect(res).to.have.property('erro');",
+                "  pm.expect(res).to.have.property('mensagem');",
+                "  pm.expect(res).to.have.property('status', 404);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }]
+        }
+      ]
+    }
+  ]
+}
