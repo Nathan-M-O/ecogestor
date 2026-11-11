@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: e24c5e16-406f-4471-8561-6e57d9c2cc4b
+
+cloudResources:
+  collections:
+    ../postman/collections/EcoGestor API: 73e5c582-1fae-4231-9d11-e66d78e5d21b
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/

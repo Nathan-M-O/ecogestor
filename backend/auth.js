@@ -22,3 +22,26 @@ export function verificarToken(req, res, next) {
     return res.status(401).json({ erro: 'Não autorizado', mensagem: 'Token inválido ou expirado', status: 401 });
   }
 }
+
+export function requerAdmin(req, res, next) {
+  if (req.usuario?.perfil !== 'admin') {
+    return res.status(403).json({
+      erro: 'Acesso negado',
+      mensagem: 'Esta operação requer perfil de administrador',
+      status: 403
+    });
+  }
+  next();
+}
+
+export function requerGestorOuAdmin(req, res, next) {
+  const perfil = req.usuario?.perfil;
+  if (perfil !== 'admin' && perfil !== 'gestor') {
+    return res.status(403).json({
+      erro: 'Acesso negado',
+      mensagem: 'Esta operação requer perfil de gestor ou administrador',
+      status: 403
+    });
+  }
+  next();
+}

@@ -39,9 +39,15 @@ db.exec(`
 
 // ===== SEED =====
 if (db.prepare('SELECT COUNT(*) as c FROM usuarios').get().c === 0) {
-  const hash = bcrypt.hashSync('admin123', 10);
-  db.prepare('INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)')
-    .run('Administrador', 'admin@eco.com', hash, 'admin');
+  const seedUsuarios = [
+    { nome: 'Administrador',     email: 'admin@eco.com',   senha: 'admin123', perfil: 'admin' },
+    { nome: 'Gestor Teste',      email: 'gestor@eco.com',  senha: 'gstr123',  perfil: 'gestor' },
+    { nome: 'Stakeholder Teste', email: 'stake@eco.com',   senha: 'stk123',   perfil: 'stakeholder' }
+  ];
+  const ins = db.prepare('INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, ?)');
+  for (const u of seedUsuarios) {
+    ins.run(u.nome, u.email, bcrypt.hashSync(u.senha, 10), u.perfil);
+  }
 }
 
 const mes = new Date().toISOString().slice(0, 7);

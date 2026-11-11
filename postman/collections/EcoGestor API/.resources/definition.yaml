@@ -1,0 +1,24 @@
+$kind: collection
+description: "Coleção de testes dos Web Services da aplicação EcoGestor (APS - Gestão Ambiental ISO 14.000). Contém 11 requisições em quatro grupos: Autenticação, Consultas, CRUD e Tratamento de Erros. O token JWT é capturado automaticamente após o login e reutilizado nas requisições protegidas."
+variables:
+  - key: baseUrl
+    value: http://localhost:3000
+    disabled: false
+  - key: token
+    secret: true
+    disabled: false
+  - key: aguaId
+    value: "1"
+    disabled: false
+  - key: tokenAdmin
+    secret: true
+    disabled: false
+  - key: tokenGestor
+    secret: true
+    disabled: false
+  - key: tokenStakeholder
+    value: ""
+    disabled: false
+  - key: aguaIdGestor
+    value: ""
+    disabled: false

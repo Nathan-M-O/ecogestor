@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/login"
+method: POST
+body:
+  type: json
+  content: '{ "email": "admin@eco.com", "senha": "admin123" }'
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 200 OK', () => pm.response.to.have.status(200));\r
+
+      pm.test('Perfil admin', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.usuario.perfil).to.eql('admin');\r
+
+      \  pm.collectionVariables.set('token', res.token);\r
+
+      \  pm.collectionVariables.set('tokenAdmin', res.token);\r
+
+      });"
+    language: text/javascript
+order: 2000

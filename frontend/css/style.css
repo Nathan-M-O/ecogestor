@@ -1,7 +1,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; color: #333; }
 
-/* Login */
+/* Tela de login */
 .tela-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2e7d32, #81c784); }
 .login-box { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.2); width: 320px; text-align: center; }
 .login-box h1 { color: #2e7d32; font-size: 2rem; margin-bottom: 8px; }
@@ -11,12 +11,17 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; color: #
 .login-box button:hover { background: #1b5e20; }
 .erro { color: #c62828; margin-top: 8px; font-size: .85rem; }
 
-/* App */
+/* Cabeçalho e navegação */
 header { background: #2e7d32; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
 header h1 { font-size: 1.3rem; }
-header span { margin-right: 16px; font-size: .9rem; }
+header span { margin-right: 12px; font-size: .9rem; }
 .btn-secundario { background: #666; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
 .btn-secundario:hover { background: #444; }
+
+.perfil-badge { padding: 4px 10px; border-radius: 12px; font-size: .75rem; font-weight: 700; letter-spacing: .5px; }
+.perfil-badge-admin { background: #c62828; color: #fff; }
+.perfil-badge-gestor { background: #f57c00; color: #fff; }
+.perfil-badge-stakeholder { background: #1976d2; color: #fff; }
 
 #tabs { background: #fff; padding: 0 24px; display: flex; gap: 4px; border-bottom: 2px solid #ddd; overflow-x: auto; }
 .tab { background: none; border: none; padding: 14px 20px; cursor: pointer; font-size: .95rem; color: #666; border-bottom: 3px solid transparent; white-space: nowrap; }
@@ -27,7 +32,7 @@ header span { margin-right: 16px; font-size: .9rem; }
 .conteudo.ativo { display: block; }
 .conteudo h2 { color: #2e7d32; margin-bottom: 16px; font-size: 1.4rem; }
 
-/* Cards */
+/* Cards de KPI */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); border-left: 4px solid #2e7d32; }
 .card-titulo { display: block; color: #666; font-size: .85rem; margin-bottom: 8px; }
@@ -41,6 +46,12 @@ header span { margin-right: 16px; font-size: .9rem; }
 .form-crud button:hover { background: #1b5e20; }
 .form-crud .btn-secundario { background: #999; }
 
+/* Busca */
+.busca-container { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.busca-input { flex: 1; min-width: 260px; padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: .95rem; background: #fff; }
+.busca-input:focus { outline: none; border-color: #2e7d32; box-shadow: 0 0 0 2px rgba(46,125,50,.15); }
+.busca-info { font-size: .85rem; color: #2e7d32; font-weight: 600; display: none; }
+
 /* Tabelas */
 table { width: 100%; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
 th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #eee; }
@@ -53,6 +64,19 @@ tr:hover { background: #f9f9f9; }
 .status-nao_conforme { color: #c62828; font-weight: 600; }
 .status-pendente { color: #f57c00; font-weight: 600; }
 
+/* Paginação */
+.paginacao { display: flex; align-items: center; gap: 12px; padding: 14px 0; flex-wrap: wrap; }
+.btn-pag { padding: 8px 16px; background: #2e7d32; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: .9rem; }
+.btn-pag:hover:not(:disabled) { background: #1b5e20; }
+.btn-pag:disabled { background: #ccc; cursor: not-allowed; }
+.pag-info { font-size: .9rem; color: #555; }
+.pag-limite { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: .9rem; cursor: pointer; }
+
+/* Exportação CSV */
+.btn-exportar { padding: 8px 16px; background: #1976d2; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: .9rem; margin-left: auto; }
+.btn-exportar:hover { background: #0d47a1; }
+.relatorio-acoes { margin-bottom: 16px; display: flex; justify-content: flex-end; }
+
 /* Gráficos */
 .grafico-container { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 20px; height: 320px; }
 .graficos-duplos { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -60,3 +84,19 @@ tr:hover { background: #f9f9f9; }
 
 /* Relatório JSON */
 #relatorio-json { background: #2d2d2d; color: #a5d6a7; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: .85rem; margin-bottom: 20px; max-height: 280px; }
+
+/* Alertas do dashboard */
+.alertas-container { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 20px; }
+.alertas-container h3 { color: #2e7d32; margin-bottom: 12px; font-size: 1.1rem; }
+.sem-alertas { color: #666; font-size: .9rem; }
+.lista-alertas { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.alerta { padding: 12px 16px; border-radius: 6px; font-size: .9rem; display: flex; align-items: center; gap: 12px; }
+.alerta-alta { background: #ffebee; border-left: 4px solid #c62828; color: #b71c1c; }
+.alerta-media { background: #fff8e1; border-left: 4px solid #f57c00; color: #e65100; }
+.alerta-badge { font-weight: 700; font-size: .75rem; padding: 4px 8px; border-radius: 4px; background: rgba(0,0,0,.1); flex-shrink: 0; }
+
+/* Restrições por perfil */
+body.perfil-stakeholder .form-crud { display: none; }
+body.perfil-stakeholder .btn-acao.btn-editar,
+body.perfil-stakeholder .btn-acao.btn-deletar { display: none; }
+body.perfil-gestor .btn-acao.btn-deletar { display: none; }

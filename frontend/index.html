@@ -26,6 +26,7 @@
   <header>
     <h1>🌱 EcoGestor</h1>
     <div>
+      <span id="usuario-perfil" class="perfil-badge"></span>
       <span id="usuario-nome"></span>
       <button onclick="logout()" class="btn-secundario">Sair</button>
     </div>
@@ -49,12 +50,20 @@
       <div class="card"><span class="card-titulo">Resíduos Reciclados</span><span class="card-valor" id="kpi-reciclado">—</span><span class="card-unidade">% do total</span></div>
       <div class="card"><span class="card-titulo">Conformidade ISO</span><span class="card-valor" id="kpi-iso">—</span><span class="card-unidade">% requisitos</span></div>
     </div>
-    <div class="grafico-container"><canvas id="grafico-dashboard"></canvas></div>
+    <div class="graficos-duplos">
+      <div class="grafico-container"><canvas id="grafico-dashboard"></canvas></div>
+      <div class="grafico-container"><canvas id="grafico-energia"></canvas></div>
+    </div>
+    <div class="alertas-container" id="alertas-dashboard"></div>
   </section>
 
   <!-- ÁGUA -->
   <section id="tab-agua" class="conteudo">
     <h2>Consumo de Água</h2>
+    <div class="busca-container">
+      <input type="text" class="busca-input" id="busca-agua" placeholder="🔍 Buscar em todos os campos..." oninput="aoBuscar('agua', this.value)">
+      <span class="busca-info" id="busca-info-agua"></span>
+    </div>
     <form class="form-crud" onsubmit="salvarAgua(event)">
       <input type="hidden" id="agua-id">
       <input type="date" id="agua-data" required>
@@ -64,11 +73,27 @@
       <button type="button" class="btn-secundario" onclick="limparFormAgua()">Limpar</button>
     </form>
     <table id="tabela-agua"><thead><tr><th>Data</th><th>Setor</th><th>m³</th><th>Ações</th></tr></thead><tbody></tbody></table>
+    <div class="paginacao" id="pag-agua">
+      <button class="btn-pag btn-anterior" onclick="mudarPagina('agua', -1)" disabled>◀ Anterior</button>
+      <span class="pag-info" id="pag-info-agua">Página 1 de 1</span>
+      <button class="btn-pag btn-proxima" onclick="mudarPagina('agua', 1)" disabled>Próxima ▶</button>
+      <select class="pag-limite" id="pag-limite-agua" onchange="mudarLimite('agua', this.value)">
+        <option value="5">5 por página</option>
+        <option value="10" selected>10 por página</option>
+        <option value="25">25 por página</option>
+        <option value="50">50 por página</option>
+      </select>
+      <button class="btn-exportar" onclick="exportarCSV('agua')">📥 Exportar CSV</button>
+    </div>
   </section>
 
   <!-- ENERGIA -->
   <section id="tab-energia" class="conteudo">
     <h2>Consumo de Energia</h2>
+    <div class="busca-container">
+      <input type="text" class="busca-input" id="busca-energia" placeholder="🔍 Buscar em todos os campos..." oninput="aoBuscar('energia', this.value)">
+      <span class="busca-info" id="busca-info-energia"></span>
+    </div>
     <form class="form-crud" onsubmit="salvarEnergia(event)">
       <input type="hidden" id="energia-id">
       <input type="date" id="energia-data" required>
@@ -78,11 +103,27 @@
       <button type="button" class="btn-secundario" onclick="limparFormEnergia()">Limpar</button>
     </form>
     <table id="tabela-energia"><thead><tr><th>Data</th><th>Setor</th><th>kWh</th><th>Ações</th></tr></thead><tbody></tbody></table>
+    <div class="paginacao" id="pag-energia">
+      <button class="btn-pag btn-anterior" onclick="mudarPagina('energia', -1)" disabled>◀ Anterior</button>
+      <span class="pag-info" id="pag-info-energia">Página 1 de 1</span>
+      <button class="btn-pag btn-proxima" onclick="mudarPagina('energia', 1)" disabled>Próxima ▶</button>
+      <select class="pag-limite" id="pag-limite-energia" onchange="mudarLimite('energia', this.value)">
+        <option value="5">5 por página</option>
+        <option value="10" selected>10 por página</option>
+        <option value="25">25 por página</option>
+        <option value="50">50 por página</option>
+      </select>
+      <button class="btn-exportar" onclick="exportarCSV('energia')">📥 Exportar CSV</button>
+    </div>
   </section>
 
   <!-- RESÍDUOS -->
   <section id="tab-residuos" class="conteudo">
     <h2>Gestão de Resíduos</h2>
+    <div class="busca-container">
+      <input type="text" class="busca-input" id="busca-residuos" placeholder="🔍 Buscar em todos os campos..." oninput="aoBuscar('residuos', this.value)">
+      <span class="busca-info" id="busca-info-residuos"></span>
+    </div>
     <form class="form-crud" onsubmit="salvarResiduo(event)">
       <input type="hidden" id="residuo-id">
       <input type="date" id="residuo-data" required>
@@ -99,11 +140,27 @@
       <button type="button" class="btn-secundario" onclick="limparFormResiduo()">Limpar</button>
     </form>
     <table id="tabela-residuos"><thead><tr><th>Data</th><th>Tipo</th><th>kg</th><th>Destinação</th><th>Ações</th></tr></thead><tbody></tbody></table>
+    <div class="paginacao" id="pag-residuos">
+      <button class="btn-pag btn-anterior" onclick="mudarPagina('residuos', -1)" disabled>◀ Anterior</button>
+      <span class="pag-info" id="pag-info-residuos">Página 1 de 1</span>
+      <button class="btn-pag btn-proxima" onclick="mudarPagina('residuos', 1)" disabled>Próxima ▶</button>
+      <select class="pag-limite" id="pag-limite-residuos" onchange="mudarLimite('residuos', this.value)">
+        <option value="5">5 por página</option>
+        <option value="10" selected>10 por página</option>
+        <option value="25">25 por página</option>
+        <option value="50">50 por página</option>
+      </select>
+      <button class="btn-exportar" onclick="exportarCSV('residuos')">📥 Exportar CSV</button>
+    </div>
   </section>
 
   <!-- ISO -->
   <section id="tab-iso" class="conteudo">
     <h2>Checklist ISO 14.000</h2>
+    <div class="busca-container">
+      <input type="text" class="busca-input" id="busca-iso" placeholder="🔍 Buscar em todos os campos..." oninput="aoBuscar('iso', this.value)">
+      <span class="busca-info" id="busca-info-iso"></span>
+    </div>
     <form class="form-crud" onsubmit="salvarIso(event)">
       <input type="hidden" id="iso-id">
       <input type="text" id="iso-requisito" placeholder="Requisito" required>
@@ -116,11 +173,26 @@
       <button type="button" class="btn-secundario" onclick="limparFormIso()">Limpar</button>
     </form>
     <table id="tabela-iso"><thead><tr><th>Requisito</th><th>Status</th><th>Ações</th></tr></thead><tbody></tbody></table>
+    <div class="paginacao" id="pag-iso">
+      <button class="btn-pag btn-anterior" onclick="mudarPagina('iso', -1)" disabled>◀ Anterior</button>
+      <span class="pag-info" id="pag-info-iso">Página 1 de 1</span>
+      <button class="btn-pag btn-proxima" onclick="mudarPagina('iso', 1)" disabled>Próxima ▶</button>
+      <select class="pag-limite" id="pag-limite-iso" onchange="mudarLimite('iso', this.value)">
+        <option value="5">5 por página</option>
+        <option value="10" selected>10 por página</option>
+        <option value="25">25 por página</option>
+        <option value="50">50 por página</option>
+      </select>
+      <button class="btn-exportar" onclick="exportarCSV('iso')">📥 Exportar CSV</button>
+    </div>
   </section>
 
   <!-- RELATÓRIOS -->
   <section id="tab-relatorios" class="conteudo">
     <h2>Relatório Consolidado</h2>
+    <div class="relatorio-acoes">
+      <button class="btn-exportar" onclick="exportarRelatorioConsolidado()">📥 Exportar Relatório Consolidado (CSV)</button>
+    </div>
     <pre id="relatorio-json"></pre>
     <div class="graficos-duplos">
       <div class="grafico-container"><canvas id="grafico-residuos"></canvas></div>

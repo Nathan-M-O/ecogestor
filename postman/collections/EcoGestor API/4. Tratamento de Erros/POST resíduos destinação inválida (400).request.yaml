@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/residuos"
+method: POST
+body:
+  type: json
+  content: '{ "data": "2026-11-10", "tipo": "X", "kg": 10, "destinacao": "Lixo Qualquer" }'
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAdmin}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 400 Bad Request', () => pm.response.to.have.status(400));\r
+
+      pm.test('Mensagem lista enum de destinação', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.mensagem.toLowerCase()).to.include('reciclagem');\r
+
+      });"
+    language: text/javascript
+order: 5000

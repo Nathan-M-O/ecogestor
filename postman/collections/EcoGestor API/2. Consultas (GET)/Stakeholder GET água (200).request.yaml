@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua?pagina=1&limite=5"
+method: GET
+queryParams:
+  pagina: "1"
+  limite: "5"
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenStakeholder}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 200 OK', () => pm.response.to.have.status(200));\r
+
+      pm.test('Stakeholder consegue ler', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.dados).to.be.an('array');\r
+
+      });"
+    language: text/javascript
+order: 10000

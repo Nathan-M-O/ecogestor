@@ -1,0 +1,27 @@
+$kind: http-request
+description: Lista todos os registros de consumo de energia.
+url: "{{baseUrl}}/api/energia"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200 OK', () => pm.response.to.have.status(200));
+      pm.test('Retorna objeto paginado com dados', () => {
+        const res = pm.response.json();
+        pm.expect(res).to.have.property('dados');
+        pm.expect(res.dados).to.be.an('array');
+        pm.expect(res).to.have.property('total');
+        pm.expect(res).to.have.property('pagina');
+        pm.expect(res).to.have.property('totalPaginas');
+      });
+      pm.test('Paginação padrão (página 1)', () => {
+        const res = pm.response.json();
+        pm.expect(res.pagina).to.eql(1);
+        pm.expect(res.limite).to.be.a('number');
+      });
+    language: text/javascript
+order: 2000

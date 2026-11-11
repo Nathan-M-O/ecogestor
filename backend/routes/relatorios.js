@@ -65,4 +65,108 @@ router.get('/ambiental-mensal/historico', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /api/relatorios/ambiental-mensal/variacao:
+ *   get:
+ *     summary: Variação mensal e alertas automáticos
+ *     tags: [Relatórios]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: query
+ *         name: mes
+ *         schema: { type: string, example: "2026-11" }
+ *     responses:
+ *       200: { description: Variações e lista de alertas }
+ */
+router.get('/ambiental-mensal/variacao', (req, res) => {
+  const mesAtual = req.query.mes || new Date().toISOString().slice(0, 7);
+  const [ano, mes] = mesAtual.split('-').map(Number);
+  const mesAnterior = mes === 1
+    ? `${ano - 1}-12`
+    : `${ano}-${String(mes - 1).padStart(2, '0')}`;
+
+  const somaAgua = (m) => db.prepare(
+    'SELECT COALESCE(SUM(m3),0) t FROM agua WHERE data LIKE ?'
+  ).get(`${m}%`).t;
+  const somaEnergia = (m) => db.prepare(
+    'SELECT COALESCE(SUM(kwh),0) t FROM energia WHERE data LIKE ?'
+  ).get(`${m}%`).t;
+  const somaResiduos = (m) => db.prepare(
+    'SELECT COALESCE(SUM(kg),0) t FROM residuos WHERE data LIKE ?'
+  ).get(`${m}%`).t;
+
+  const aguaAtual = somaAgua(mesAtual);
+  const aguaAnterior = somaAgua(mesAnterior);
+  const energiaAtual = somaEnergia(mesAtual);
+  const energiaAnterior = somaEnergia(mesAnterior);
+  const residuosAtual = somaResiduos(mesAtual);
+  const residuosAnterior = somaResiduos(mesAnterior);
+
+  const calcVar = (atual, anterior) =>
+    anterior === 0 ? null : Number((((atual - anterior) / anterior) * 100).toFixed(2));
+
+  const aguaVar = calcVar(aguaAtual, aguaAnterior);
+  const energiaVar = calcVar(energiaAtual, energiaAnterior);
+  const residuosVar = calcVar(residuosAtual, residuosAnterior);
+
+  const alertas = [];
+
+  const geraAlertaConsumo = (recurso, varPerc) => {
+    if (varPerc === null) return;
+    if (varPerc > 15) {
+      alertas.push({
+        recurso,
+        severidade: 'alta',
+        mensagem: `Consumo de ${recurso} ${varPerc.toFixed(1)}% acima do mês anterior`,
+        variacao: varPerc
+      });
+    } else if (varPerc > 5) {
+      alertas.push({
+        recurso,
+        severidade: 'media',
+        mensagem: `Consumo de ${recurso} ${varPerc.toFixed(1)}% acima do mês anterior`,
+        variacao: varPerc
+      });
+    }
+  };
+
+  geraAlertaConsumo('agua', aguaVar);
+  geraAlertaConsumo('energia', energiaVar);
+  geraAlertaConsumo('residuos', residuosVar);
+
+  const isoOk = db.prepare("SELECT COUNT(*) c FROM iso_checklist WHERE status='conforme'").get().c;
+  const isoAll = db.prepare('SELECT COUNT(*) c FROM iso_checklist').get().c;
+  const percIso = isoAll > 0 ? (isoOk / isoAll) * 100 : 100;
+  if (percIso < 70) {
+    alertas.push({
+      recurso: 'iso',
+      severidade: 'alta',
+      mensagem: `Conformidade ISO em ${percIso.toFixed(1)}% (abaixo de 70%)`,
+      variacao: Number(percIso.toFixed(2))
+    });
+  }
+
+  const recicladoAtual = db.prepare(
+    "SELECT COALESCE(SUM(kg),0) t FROM residuos WHERE data LIKE ? AND destinacao='Reciclagem'"
+  ).get(`${mesAtual}%`).t;
+  const percRec = residuosAtual > 0 ? (recicladoAtual / residuosAtual) * 100 : 100;
+  if (percRec < 50) {
+    alertas.push({
+      recurso: 'residuos',
+      severidade: 'media',
+      mensagem: `Apenas ${percRec.toFixed(1)}% dos resíduos foram reciclados (abaixo de 50%)`,
+      variacao: Number(percRec.toFixed(2))
+    });
+  }
+
+  res.json({
+    periodo: { atual: mesAtual, anterior: mesAnterior },
+    agua: { mesAtual: aguaAtual, mesAnterior: aguaAnterior, variacaoPercentual: aguaVar },
+    energia: { mesAtual: energiaAtual, mesAnterior: energiaAnterior, variacaoPercentual: energiaVar },
+    residuos: { mesAtual: residuosAtual, mesAnterior: residuosAnterior, variacaoPercentual: residuosVar },
+    alertas
+  });
+});
+
 export default router;

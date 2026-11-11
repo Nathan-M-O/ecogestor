@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua"
+method: POST
+body:
+  type: json
+  content: '{ "data": "2026-11-11", "setor": "Teste Gestor", "m3": 33.5 }'
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenGestor}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 201 Created', () => pm.response.to.have.status(201));\r
+
+      pm.test('Registro criado por gestor', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.setor).to.eql('Teste Gestor');\r
+
+      \  pm.collectionVariables.set('aguaIdGestor', res.id);\r
+
+      });"
+    language: text/javascript
+order: 3000

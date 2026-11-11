@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua?pagina=1&limite=1000"
+method: GET
+queryParams:
+  pagina: "1"
+  limite: "1000"
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAdmin}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 200 OK', () => pm.response.to.have.status(200));\r
+
+      pm.test('Limite é forçado a no máximo 100', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.limite).to.eql(100);\r
+
+      });"
+    language: text/javascript
+order: 9000

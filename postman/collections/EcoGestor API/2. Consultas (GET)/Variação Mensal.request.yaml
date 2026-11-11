@@ -1,0 +1,44 @@
+$kind: http-request
+url: "{{baseUrl}}/api/relatorios/ambiental-mensal/variacao"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 200 OK', () => pm.response.to.have.status(200));\r
+
+      pm.test('Retorna período atual e anterior', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res).to.have.property('periodo');\r
+
+      \  pm.expect(res.periodo).to.have.property('atual');\r
+
+      \  pm.expect(res.periodo).to.have.property('anterior');\r
+
+      });\r
+
+      pm.test('Retorna variações dos três recursos', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res).to.have.property('agua');\r
+
+      \  pm.expect(res).to.have.property('energia');\r
+
+      \  pm.expect(res).to.have.property('residuos');\r
+
+      });\r
+
+      pm.test('Retorna lista de alertas', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.alertas).to.be.an('array');\r
+
+      });"
+    language: text/javascript
+order: 7000

@@ -1,0 +1,30 @@
+$kind: http-request
+description: Cria um novo registro de consumo de água. O ID retornado é capturado na variável aguaId para uso no DELETE.
+url: "{{baseUrl}}/api/agua"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "data": "2026-11-10",
+      "setor": "Teste Postman",
+      "m3": 42.5
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 201 Created', () => pm.response.to.have.status(201));
+      pm.test('Registro criado com ID', () => {
+        const res = pm.response.json();
+        pm.expect(res).to.have.property('id');
+        pm.expect(res.setor).to.eql('Teste Postman');
+        pm.collectionVariables.set('aguaId', res.id);
+      });
+    language: text/javascript
+order: 1000

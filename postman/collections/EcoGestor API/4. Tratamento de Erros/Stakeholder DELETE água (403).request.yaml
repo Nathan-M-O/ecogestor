@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua/1"
+method: DELETE
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenStakeholder}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 403 Forbidden', () => pm.response.to.have.status(403));\r
+
+      pm.test('Corpo de erro padronizado', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res).to.have.property('erro');\r
+
+      \  pm.expect(res).to.have.property('mensagem');\r
+
+      \  pm.expect(res).to.have.property('status', 403);\r
+
+      });"
+    language: text/javascript
+order: 9000

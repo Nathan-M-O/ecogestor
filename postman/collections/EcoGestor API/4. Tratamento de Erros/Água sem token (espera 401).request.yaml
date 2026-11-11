@@ -1,0 +1,18 @@
+$kind: http-request
+description: Requisição sem token JWT. Deve retornar HTTP 401 comprovando que a rota é protegida.
+url: "{{baseUrl}}/api/agua"
+method: GET
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 401 Unauthorized', () => pm.response.to.have.status(401));
+      pm.test('Corpo do erro padronizado', () => {
+        const res = pm.response.json();
+        pm.expect(res).to.have.property('erro');
+        pm.expect(res).to.have.property('mensagem');
+        pm.expect(res).to.have.property('status', 401);
+      });
+    language: text/javascript
+order: 1000

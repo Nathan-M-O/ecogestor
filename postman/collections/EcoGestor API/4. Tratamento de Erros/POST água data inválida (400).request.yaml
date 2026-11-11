@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua"
+method: POST
+body:
+  type: json
+  content: '{ "data": "2026-13-99", "setor": "X", "m3": 10 }'
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAdmin}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 400 Bad Request', () => pm.response.to.have.status(400));\r
+
+      pm.test('Mensagem menciona formato da data', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.mensagem.toLowerCase()).to.include('data');\r
+
+      });"
+    language: text/javascript
+order: 3000

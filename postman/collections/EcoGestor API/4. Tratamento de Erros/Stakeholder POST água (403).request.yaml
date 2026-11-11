@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua"
+method: POST
+body:
+  type: json
+  content: '{ "data": "2026-11-11", "setor": "Teste Stake", "m3": 5 }'
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenStakeholder}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 403 Forbidden', () => pm.response.to.have.status(403));\r
+
+      pm.test('Mensagem menciona perfil gestor ou admin', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.mensagem.toLowerCase()).to.include('gestor');\r
+
+      });"
+    language: text/javascript
+order: 7000

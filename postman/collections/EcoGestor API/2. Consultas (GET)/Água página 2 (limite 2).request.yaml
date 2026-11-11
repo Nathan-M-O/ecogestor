@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua?pagina=2&limite=2"
+method: GET
+queryParams:
+  pagina: "2"
+  limite: "2"
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAdmin}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 200 OK', () => pm.response.to.have.status(200));\r
+
+      pm.test('Retorna página 2 com 2 itens', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.pagina).to.eql(2);\r
+
+      \  pm.expect(res.limite).to.eql(2);\r
+
+      \  pm.expect(res.dados.length).to.be.at.most(2);\r
+
+      \  pm.expect(res).to.have.property('totalPaginas');\r
+
+      \  pm.expect(res).to.have.property('total');\r
+
+      });"
+    language: text/javascript
+order: 8000

@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/agua/{{aguaIdGestor}}"
+method: DELETE
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenGestor}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test('Status 403 Forbidden', () => pm.response.to.have.status(403));\r
+
+      pm.test('Mensagem de acesso negado', () => {\r
+
+      \  const res = pm.response.json();\r
+
+      \  pm.expect(res.erro.toLowerCase()).to.include('acesso negado');\r
+
+      \  pm.expect(res.status).to.eql(403);\r
+
+      });"
+    language: text/javascript
+order: 6000

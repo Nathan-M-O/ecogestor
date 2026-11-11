@@ -1,0 +1,19 @@
+$kind: http-request
+description: Retorna o relatório consolidado com todos os indicadores ambientais calculados no backend.
+url: "{{baseUrl}}/api/relatorios/ambiental-mensal"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200 OK', () => pm.response.to.have.status(200));
+      pm.test('Contém bloco de água', () => pm.expect(pm.response.json()).to.have.property('agua'));
+      pm.test('Contém bloco de energia', () => pm.expect(pm.response.json()).to.have.property('energia'));
+      pm.test('Contém bloco de resíduos', () => pm.expect(pm.response.json()).to.have.property('residuos'));
+      pm.test('Contém bloco ISO 14000', () => pm.expect(pm.response.json()).to.have.property('iso14000'));
+      pm.test('Contém pegada de carbono', () => pm.expect(pm.response.json()).to.have.property('pegadaCarbono'));
+    language: text/javascript
+order: 5000

@@ -1,0 +1,20 @@
+$kind: http-request
+description: Busca por um registro inexistente. Deve retornar HTTP 404 com corpo de erro padronizado.
+url: "{{baseUrl}}/api/agua/99999"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 404 Not Found', () => pm.response.to.have.status(404));
+      pm.test('Corpo do erro padronizado', () => {
+        const res = pm.response.json();
+        pm.expect(res).to.have.property('erro');
+        pm.expect(res).to.have.property('mensagem');
+        pm.expect(res).to.have.property('status', 404);
+      });
+    language: text/javascript
+order: 2000
