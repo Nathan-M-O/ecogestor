@@ -14,8 +14,8 @@
   <div class="login-box">
     <h1>🌱 EcoGestor</h1>
     <p>Gestão Ambiental ISO 14.000</p>
-    <input id="login-email" type="email" placeholder="E-mail" value="admin@eco.com">
-    <input id="login-senha" type="password" placeholder="Senha" value="admin123">
+    <input id="login-email" type="email" placeholder="E-mail">
+    <input id="login-senha" type="password" placeholder="Senha">
     <button onclick="fazerLogin()">Entrar</button>
     <p id="login-erro" class="erro"></p>
   </div>
@@ -193,7 +193,7 @@
     <div class="relatorio-acoes">
       <button class="btn-exportar" onclick="exportarRelatorioConsolidado()">📥 Exportar Relatório Consolidado (CSV)</button>
     </div>
-    <pre id="relatorio-json"></pre>
+    <div id="relatorio-formatado" class="relatorio-formatado"></div>
     <div class="graficos-duplos">
       <div class="grafico-container"><canvas id="grafico-residuos"></canvas></div>
       <div class="grafico-container"><canvas id="grafico-historico"></canvas></div>

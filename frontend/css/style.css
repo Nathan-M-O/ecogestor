@@ -1,18 +1,44 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; color: #333; }
 
 /* Tela de login */
-.tela-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2e7d32, #81c784); }
-.login-box { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.2); width: 320px; text-align: center; }
+.tela-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 40%, #66bb6a 100%);
+}
+.login-box {
+  background: #fff;
+  padding: 48px 40px;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  width: 340px;
+  text-align: center;
+  border-top: 4px solid #2e7d32;
+}
 .login-box h1 { color: #2e7d32; font-size: 2rem; margin-bottom: 8px; }
 .login-box p { color: #666; margin-bottom: 20px; font-size: .9rem; }
 .login-box input { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
 .login-box button { width: 100%; padding: 12px; margin-top: 12px; background: #2e7d32; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
 .login-box button:hover { background: #1b5e20; }
-.erro { color: #c62828; margin-top: 8px; font-size: .85rem; }
+.erro { color: #c62828; margin-top: 8px; font-size: .85rem; min-height: 20px; }
 
-/* Cabeçalho e navegação */
-header { background: #2e7d32; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+/* Cabeçalho */
+header {
+  background: #2e7d32;
+  color: #fff;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 header h1 { font-size: 1.3rem; }
 header span { margin-right: 12px; font-size: .9rem; }
 .btn-secundario { background: #666; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
@@ -32,9 +58,28 @@ header span { margin-right: 12px; font-size: .9rem; }
 .conteudo.ativo { display: block; }
 .conteudo h2 { color: #2e7d32; margin-bottom: 16px; font-size: 1.4rem; }
 
-/* Cards de KPI */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); border-left: 4px solid #2e7d32; }
+/* Cards de KPI — 4 colunas alinhadas */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 1024px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px)  { .cards { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  border-left: 4px solid #2e7d32;
+  transition: transform .2s, box-shadow .2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+}
 .card-titulo { display: block; color: #666; font-size: .85rem; margin-bottom: 8px; }
 .card-valor { display: block; font-size: 2rem; font-weight: 700; color: #2e7d32; }
 .card-unidade { display: block; color: #999; font-size: .8rem; margin-top: 4px; }
@@ -56,7 +101,8 @@ header span { margin-right: 12px; font-size: .9rem; }
 table { width: 100%; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.05); }
 th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #eee; }
 th { background: #f0f0f0; font-weight: 600; color: #333; font-size: .9rem; }
-tr:hover { background: #f9f9f9; }
+tbody tr:nth-child(even) { background: #fafafa; }
+tbody tr:hover { background: #e8f5e9; }
 .btn-acao { padding: 6px 12px; margin-right: 4px; border: none; border-radius: 4px; cursor: pointer; font-size: .85rem; }
 .btn-editar { background: #1976d2; color: #fff; }
 .btn-deletar { background: #c62828; color: #fff; }
@@ -82,8 +128,36 @@ tr:hover { background: #f9f9f9; }
 .graficos-duplos { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 @media (max-width: 768px) { .graficos-duplos { grid-template-columns: 1fr; } }
 
-/* Relatório JSON */
-#relatorio-json { background: #2d2d2d; color: #a5d6a7; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: .85rem; margin-bottom: 20px; max-height: 280px; }
+/* Relatório formatado */
+.relatorio-formatado { background: #fff; padding: 24px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 20px; }
+.relatorio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e8f5e9;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.relatorio-header h3 { color: #2e7d32; font-size: 1.3rem; margin: 0; }
+.relatorio-periodo { background: #e8f5e9; color: #1b5e20; padding: 6px 14px; border-radius: 20px; font-size: .85rem; font-weight: 600; }
+.relatorio-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 768px) { .relatorio-grid { grid-template-columns: 1fr; } }
+.relatorio-item {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #f9fbe7;
+  border-left: 3px solid #2e7d32;
+  align-items: flex-start;
+}
+.relatorio-item-full { grid-column: 1 / -1; }
+.relatorio-icone { font-size: 2rem; flex-shrink: 0; line-height: 1; }
+.relatorio-label { display: block; color: #666; font-size: .8rem; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.relatorio-valor { display: block; color: #1b5e20; font-size: 1.4rem; font-weight: 700; margin-bottom: 2px; }
+.relatorio-detalhe { display: block; color: #999; font-size: .8rem; }
 
 /* Alertas do dashboard */
 .alertas-container { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 20px; }
@@ -100,3 +174,7 @@ body.perfil-stakeholder .form-crud { display: none; }
 body.perfil-stakeholder .btn-acao.btn-editar,
 body.perfil-stakeholder .btn-acao.btn-deletar { display: none; }
 body.perfil-gestor .btn-acao.btn-deletar { display: none; }
+
+/* Feedback nos botões */
+button { transition: all .15s; }
+button:active { transform: scale(0.97); }
