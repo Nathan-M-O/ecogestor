@@ -1,3 +1,18 @@
+// ============ VERIFICAÇÃO DE SESSÃO ============
+function tokenExpirado() {
+  const token = getToken();
+  if (!token) return true;
+  try {
+    const partes = token.split('.');
+    if (partes.length !== 3) return true;
+    const payload = JSON.parse(atob(partes[1]));
+    if (!payload.exp) return true;
+    return (payload.exp * 1000) <= Date.now();
+  } catch {
+    return true;
+  }
+}
+
 // ============ PAGINAÇÃO E BUSCA ============
 const pag = {
   agua:     { pagina: 1, limite: 10, totalPaginas: 1 },
@@ -616,7 +631,59 @@ let chartRes = null, chartHist = null;
 async function carregarRelatorios() {
   try {
     const r = await apiFetch('/api/relatorios/ambiental-mensal');
-    document.getElementById('relatorio-json').textContent = JSON.stringify(r, null, 2);
+
+    const nomesMeses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    const [ano, mesNum] = r.mes.split('-');
+    const mesNome = nomesMeses[parseInt(mesNum) - 1];
+
+    document.getElementById('relatorio-formatado').innerHTML = `
+      <div class="relatorio-header">
+        <h3>Indicadores Consolidados</h3>
+        <span class="relatorio-periodo">${mesNome} de ${ano}</span>
+      </div>
+      <div class="relatorio-grid">
+        <div class="relatorio-item">
+          <span class="relatorio-icone">💧</span>
+          <div>
+            <span class="relatorio-label">Consumo de Água</span>
+            <span class="relatorio-valor">${r.agua.totalM3.toFixed(2)} m³</span>
+            <span class="relatorio-detalhe">${r.agua.registros} registro(s) no mês</span>
+          </div>
+        </div>
+        <div class="relatorio-item">
+          <span class="relatorio-icone">⚡</span>
+          <div>
+            <span class="relatorio-label">Consumo de Energia</span>
+            <span class="relatorio-valor">${r.energia.totalKwh.toFixed(2)} kWh</span>
+            <span class="relatorio-detalhe">${r.energia.registros} registro(s) no mês</span>
+          </div>
+        </div>
+        <div class="relatorio-item">
+          <span class="relatorio-icone">♻️</span>
+          <div>
+            <span class="relatorio-label">Resíduos Gerados</span>
+            <span class="relatorio-valor">${r.residuos.totalKg.toFixed(2)} kg</span>
+            <span class="relatorio-detalhe">${r.residuos.recicladoKg.toFixed(2)} kg reciclados (${r.residuos.percentualReciclado.toFixed(1)}%)</span>
+          </div>
+        </div>
+        <div class="relatorio-item">
+          <span class="relatorio-icone">✅</span>
+          <div>
+            <span class="relatorio-label">Conformidade ISO 14.000</span>
+            <span class="relatorio-valor">${r.iso14000.percentualConformidade.toFixed(1)}%</span>
+            <span class="relatorio-detalhe">${r.iso14000.conformes} de ${r.iso14000.total} requisitos conformes</span>
+          </div>
+        </div>
+        <div class="relatorio-item relatorio-item-full">
+          <span class="relatorio-icone">🌍</span>
+          <div>
+            <span class="relatorio-label">Pegada de Carbono Simplificada</span>
+            <span class="relatorio-valor">${r.pegadaCarbono.totalKgCO2e.toFixed(2)} kg CO₂e</span>
+            <span class="relatorio-detalhe">Cálculo: (kWh × 0,0842) + (m³ × 0,0003)</span>
+          </div>
+        </div>
+      </div>
+    `;
 
     if (chartRes) chartRes.destroy();
     const reciclado = r.residuos.recicladoKg;
@@ -659,4 +726,13 @@ async function carregarRelatorios() {
 document.getElementById('login-senha')
   .addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin(); });
 
-if (getToken()) iniciarApp();
+if (sessionStorage.getItem('sessaoExpirada') === '1') {
+  document.getElementById('login-erro').textContent = 'Sessão expirada. Faça login novamente.';
+  sessionStorage.removeItem('sessaoExpirada');
+}
+
+if (getToken() && !tokenExpirado()) {
+  iniciarApp();
+} else {
+  limparToken();
+}
