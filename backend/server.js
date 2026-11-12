@@ -63,7 +63,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`\n🌱 EcoGestor API: http://localhost:${PORT}`);
-  console.log(`📚 Swagger:      http://localhost:${PORT}/api-docs`);
-  console.log(`🔐 Login:        admin@eco.com / admin123\n`);
+  console.log(`\nEcoGestor API: http://localhost:${PORT}`);
+  console.log(`Swagger: http://localhost:${PORT}/api-docs`);
+  console.log(`Login: admin@eco.com / admin123\n`);
 });
